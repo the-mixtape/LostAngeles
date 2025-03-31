@@ -138,4 +138,7 @@ _NCrunch*
 .idea
 
 #FiveM build
-dist
+Dist
+
+#version temp file
+gitversion.txt
