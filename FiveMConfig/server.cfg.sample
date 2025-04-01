@@ -8,7 +8,6 @@ ensure chat
 ensure spawnmanager
 ensure sessionmanager
 ensure basic-gamemode
-ensure hardcap
 ensure rconlog
 
 ensure LostAngeles
