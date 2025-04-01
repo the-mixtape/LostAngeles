@@ -13,5 +13,11 @@
   
       <PackageReference Include="NLog" Version="5.4.0" />
     </ItemGroup>
+  
+    <ItemGroup>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>
   

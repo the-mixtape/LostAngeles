@@ -6,7 +6,6 @@ endpoint_add_udp "0.0.0.0:30120"
 ensure mapmanager
 ensure chat
 ensure chat-theme-gtao
-ensure spawnmanager
 ensure LostAngeles
 
 # This allows players to use scripthook-based plugins such as the legacy Lambda Menu.
