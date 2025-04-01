@@ -9,7 +9,7 @@ namespace LostAngeles.Server.Core
 {
     public class HardCap : BaseScript
     {
-        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetLogger("HARDCAP");
         
         private readonly Dictionary<int, DateTime> _activePlayers = new Dictionary<int, DateTime>();
         private readonly int _maxClients;
@@ -29,7 +29,7 @@ namespace LostAngeles.Server.Core
         {
             try
             {
-                _log.Info($"Connecting: '{source.Name}' (" +
+                Log.Info($"Connecting: '{source.Name}' (" +
                           $"steam: {source.Identifiers.Where(i => i.Contains("steam")).FirstOrDefault().ToString()} " +
                           $"ip: {source.Identifiers.Where(i => i.Contains("ip")).FirstOrDefault().ToString()}" +
                           $") | Player count {_activePlayers.Count}/{_maxClients}");
@@ -39,12 +39,12 @@ namespace LostAngeles.Server.Core
                 {
                     denyWithReason?.Invoke($"This server is full with {playerCount}/{_maxClients} players on.");
                     API.CancelEvent();
-                    _log.Info($"Player '{source.Name}' dropped. Server is full.");
+                    Log.Info($"Player '{source.Name}' dropped. Server is full.");
                 }
             }
             catch (Exception ex)
             {
-                _log.Error($"PlayerConnecting error: {ex.Message}");
+                Log.Error($"PlayerConnecting error: {ex.Message}");
             }
         }
 
@@ -56,13 +56,13 @@ namespace LostAngeles.Server.Core
                 if (_activePlayers.ContainsKey(sessionId))
                 {
                     _activePlayers.Remove(sessionId);
-                    _log.Info($"Session#{sessionId} dropped: {reason}");
+                    Log.Info($"Session#{sessionId} dropped: {reason}");
                 }
                 TriggerClientEvent("playerDropped", source.Handle, reason);
             }
             catch(Exception ex)
             {
-                _log.Error($"PlayerDropped error: {ex.Message}");
+                Log.Error($"PlayerDropped error: {ex.Message}");
             }
         }
 
@@ -76,7 +76,7 @@ namespace LostAngeles.Server.Core
                 _activePlayers.Add(sessionId, DateTime.UtcNow);
 
                 var license = source.Identifiers["license"];
-                _log.Info($"Session#{sessionId} activated (player: '{source.Name}').");
+                Log.Info($"Session#{sessionId} activated (player: '{source.Name}').");
 
                 if (string.IsNullOrEmpty(license))
                 {
@@ -94,7 +94,7 @@ namespace LostAngeles.Server.Core
             }
             catch (Exception ex)
             {
-                _log.Error($"PlayerActivated error: {ex.Message}");
+                Log.Error($"PlayerActivated error: {ex.Message}");
             }
         }
     }

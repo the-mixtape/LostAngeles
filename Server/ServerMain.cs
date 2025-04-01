@@ -9,6 +9,8 @@ namespace LostAngeles.Server
 {
     public class ServerMain : BaseScript
     {
+        private static readonly Logger Log = LogManager.GetLogger("SERVERMAIN");
+        
         public ServerMain()
         {
             InitializeLogger();
@@ -19,7 +21,7 @@ namespace LostAngeles.Server
             var config = new LoggingConfiguration();
 
             const string layout =
-                "${longdate} | ${level:uppercase=true} | ${logger} | ${message} ${exception:format=ToString}";
+                "${longdate} | ${level:uppercase=true} | [${logger}] ${message} ${exception:format=ToString}";
             var consoleTarget = new ConsoleTarget("console")
             {
                 Layout = layout
@@ -38,13 +40,14 @@ namespace LostAngeles.Server
             };
             config.AddTarget(fileTarget);
 
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, consoleTarget);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, fileTarget);
-
+            foreach (var target in config.AllTargets)
+            {
+                config.AddRule(LogLevel.Debug, LogLevel.Fatal, target);
+            }
+            
             LogManager.Configuration = config;
 
-            var log = LogManager.GetCurrentClassLogger();
-            log.Info("NLog configured.");
+            Log.Info("NLog configured.");
         }
     }
 }
