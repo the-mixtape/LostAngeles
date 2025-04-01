@@ -17,8 +17,8 @@ namespace LostAngeles.Client.Core
             if (API.GetCurrentResourceName() != resourceName) return;
             
             // test spawn manager
-            var position = new SpawnPosition(-1238, -1840, 2.5f, 320);
-            SpawnManager.Spawn(position);
+            // var position = new SpawnPosition(-1238, -1840, 2.5f, 320);
+            // SpawnManager.Spawn(position);
         }
     }
 }

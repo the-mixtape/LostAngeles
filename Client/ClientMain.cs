@@ -9,7 +9,7 @@ namespace LostAngeles.Client
     {
         public ClientMain()
         {
-            Debug.WriteLine("Hi from LostAngeles.Client!");
+            
         }
     }
 }

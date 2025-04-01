@@ -1,22 +1,44 @@
 using System.IO;
-using System.Xml.XPath;
 using CitizenFX.Core;
+using CitizenFX.Core.Native;
+using LostAngeles.Server.Config;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace LostAngeles.Server
 {
     public class ServerMain : BaseScript
     {
         private static readonly Logger Log = LogManager.GetLogger("SERVERMAIN");
-        
+        private static GlobalConfig Config { get; set; }
+
         public ServerMain()
         {
-            InitializeLogger();
+            ReadConfig();
+            InitializeLogger(Config.LogConfig.LogsPath, Config.LogConfig.LogLevel);
         }
 
-        private void InitializeLogger()
+        private void ReadConfig()
+        {
+            var filePath = Path.Combine(API.GetResourcePath(API.GetCurrentResourceName()), "server.yml");
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new FileNotFoundException($"The server configuration file could not be found. Config: {filePath}.");
+            }
+
+            var yaml = File.ReadAllText(filePath);
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                .Build();
+
+            Config = deserializer.Deserialize<GlobalConfig>(yaml);
+            Log.Info("Server config loaded");
+        }
+        
+        private void InitializeLogger(string logPath, int logLevel)
         {
             var config = new LoggingConfiguration();
 
@@ -28,7 +50,6 @@ namespace LostAngeles.Server
             };
             config.AddTarget(consoleTarget);
 
-            const string logPath = "${basedir}/logs"; //TODO: from config 
             var fileTarget = new FileTarget("file")
             {
                 FileName = Path.Combine(logPath, "server.log"),
@@ -40,9 +61,10 @@ namespace LostAngeles.Server
             };
             config.AddTarget(fileTarget);
 
+            var minLevel = LogLevel.FromOrdinal(logLevel);
             foreach (var target in config.AllTargets)
             {
-                config.AddRule(LogLevel.Debug, LogLevel.Fatal, target);
+                config.AddRule(minLevel, LogLevel.Fatal, target);
             }
             
             LogManager.Configuration = config;
