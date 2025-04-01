@@ -7,18 +7,18 @@ namespace LostAngeles.Server.Config
     public class GlobalConfig
     {
         public List<SpawnPosition> SpawnPositions { get; set; }
-        
         public LogConfig LogConfig { get; set; }
-        
-        // public string DatabaseConnectionString { get; set; }
-        
-        // public ClientConfig ClientConfig { get; set; }
-        
+        public DatabaseConfig DatabaseConfig { get; set; }
     }
 
     public class LogConfig
     {
         public string LogsPath { get; set; }
         public int LogLevel { get; set; }
+    }
+
+    public class DatabaseConfig
+    {
+        public string ConnectionString { get; set; }
     }
 }

@@ -1,0 +1,6 @@
+CREATE TABLE users
+(
+    Id        SERIAL PRIMARY KEY,
+    License   VARCHAR(64) NOT NULL UNIQUE,
+    Character JSON DEFAULT NULL
+);

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using LostAngeles.Server.Domain;
+using LostAngeles.Server.Repository;
 using NLog;
 
 namespace LostAngeles.Server.Core
@@ -10,7 +13,9 @@ namespace LostAngeles.Server.Core
     public class HardCap : BaseScript
     {
         private static readonly Logger Log = LogManager.GetLogger("HARDCAP");
-        
+        public static IBlacklist BlacklistRepo { get; set; }
+
+
         private readonly Dictionary<int, DateTime> _activePlayers = new Dictionary<int, DateTime>();
         private readonly int _maxClients;
 
@@ -25,76 +30,59 @@ namespace LostAngeles.Server.Core
         }
 
         private void OnPlayerConnecting([FromSource] CitizenFX.Core.Player source, string playerName,
-            CallbackDelegate denyWithReason)
+            CallbackDelegate setKickReason)
         {
-            try
-            {
-                Log.Info($"Connecting: '{source.Name}' (" +
-                          $"steam: {source.Identifiers.Where(i => i.Contains("steam")).FirstOrDefault().ToString()} " +
-                          $"ip: {source.Identifiers.Where(i => i.Contains("ip")).FirstOrDefault().ToString()}" +
-                          $") | Player count {_activePlayers.Count}/{_maxClients}");
+            Log.Info($"Connecting: '{source.Name}' (" +
+                     $"steam: {source.Identifiers.Where(i => i.Contains("steam")).FirstOrDefault().ToString()} " +
+                     $"ip: {source.Identifiers.Where(i => i.Contains("ip")).FirstOrDefault().ToString()} " +
+                     $"license: {source.Identifiers["license"]}" +
+                     $") | Player count {_activePlayers.Count}/{_maxClients}");
 
-                var playerCount = _activePlayers.Count;
-                if (playerCount >= _maxClients)
-                {
-                    denyWithReason?.Invoke($"This server is full with {playerCount}/{_maxClients} players on.");
-                    API.CancelEvent();
-                    Log.Info($"Player '{source.Name}' dropped. Server is full.");
-                }
-            }
-            catch (Exception ex)
+
+            var playerCount = _activePlayers.Count;
+            if (playerCount >= _maxClients)
             {
-                Log.Error($"PlayerConnecting error: {ex.Message}");
+                var reason = $"You have been kicked (Reason: [Full Server])";
+                Log.Info($"Player '{source.Name}' dropped. Reason: {reason}.");
+                setKickReason(reason);
+                API.CancelEvent();
             }
         }
 
         private void OnPlayerDropped([FromSource] CitizenFX.Core.Player source, string reason)
         {
-            try
+            int sessionId = Int32.Parse(source.Handle);
+            if (_activePlayers.ContainsKey(sessionId))
             {
-                int sessionId = Int32.Parse(source.Handle);
-                if (_activePlayers.ContainsKey(sessionId))
-                {
-                    _activePlayers.Remove(sessionId);
-                    Log.Info($"Session#{sessionId} dropped: {reason}");
-                }
-                TriggerClientEvent("playerDropped", source.Handle, reason);
+                _activePlayers.Remove(sessionId);
+                Log.Info($"Session#{sessionId} dropped: {reason}");
             }
-            catch(Exception ex)
-            {
-                Log.Error($"PlayerDropped error: {ex.Message}");
-            }
+
+            TriggerClientEvent("playerDropped", source.Handle, reason);
         }
 
-        private void OnPlayerActivated([FromSource] CitizenFX.Core.Player source)
+        private async void OnPlayerActivated([FromSource] CitizenFX.Core.Player source)
         {
-            try
+            var sessionId = Int32.Parse(source.Handle);
+            if (_activePlayers.ContainsKey(sessionId)) return;
+            _activePlayers.Add(sessionId, DateTime.UtcNow);
+
+            var licenseIdentifier = source.Identifiers["license"];
+            Log.Info($"Session#{sessionId} activated (player: '{source.Name}').");
+
+            if (string.IsNullOrEmpty(licenseIdentifier))
             {
-
-                var sessionId = Int32.Parse(source.Handle);
-                if (_activePlayers.ContainsKey(sessionId)) return;
-                _activePlayers.Add(sessionId, DateTime.UtcNow);
-
-                var license = source.Identifiers["license"];
-                Log.Info($"Session#{sessionId} activated (player: '{source.Name}').");
-
-                if (string.IsNullOrEmpty(license))
-                {
-                    API.DropPlayer(source.Handle, "Unknown error!!! Please try again later.");
-                    return;
-                }
-                
-                // var (userId, wasCreated) = await Database.Database.GetOrCreateUser(license);
-                // if (userId != null)
-                // {
-                // string joinMessage = wasCreated ? "Joined for first time to server!" : "Joined to server!"; 
-                // Debug.WriteLine($"{source.Name}#{userId:0000} - {joinMessage}");
-                // return;
-                // }
+                API.DropPlayer(source.Handle, "Unknown error!!! Please try again later.");
+                return;
             }
-            catch (Exception ex)
+
+            Blacklist blacklist = await BlacklistRepo.GetByLicenseAsync(licenseIdentifier);
+            Log.Debug($"Blacklist for license:{licenseIdentifier} = {blacklist}");
+            if (blacklist != null)
             {
-                Log.Error($"PlayerActivated error: {ex.Message}");
+                var reason =
+                    $"You have been kicked (Reason: [Banned])! Ban reason: {blacklist.Reason}. If you think this is a bug, please contact the server administration (Identifier: [{licenseIdentifier}]).";
+                API.DropPlayer(source.Handle, reason);
             }
         }
     }

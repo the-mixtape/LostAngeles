@@ -6,5 +6,7 @@ SpawnPositions:
   - Location: { X: -1530.0, Y: -1280.0, Z: 2.0 }
     Heading: 269.0
 LogConfig:
-  LogsPath: "D:/FiveM/FXServer/logs"
+  LogsPath: "X:/Path/To/Logs"
   LogLevel: 2 # Trace - 0, Debug - 1, Info - 2, Warn - 3, Error - 4, Fatal - 5
+DatabaseConfig:
+  ConnectionString: "Host=;Database=;Username=;Password="
