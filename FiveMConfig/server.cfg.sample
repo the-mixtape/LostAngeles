@@ -5,12 +5,7 @@ endpoint_add_udp "0.0.0.0:30120"
 # These resources will start by default.
 ensure mapmanager
 ensure chat
-ensure spawnmanager
-ensure sessionmanager
-ensure basic-gamemode
-ensure hardcap
-ensure rconlog
-
+ensure chat-theme-gtao
 ensure LostAngeles
 
 # This allows players to use scripthook-based plugins such as the legacy Lambda Menu.

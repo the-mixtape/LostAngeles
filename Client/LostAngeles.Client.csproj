@@ -2,4 +2,9 @@
     <ItemGroup>
         <Compile Include="../Shared/**/*.cs" />
     </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>
