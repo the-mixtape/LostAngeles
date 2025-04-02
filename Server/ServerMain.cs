@@ -85,7 +85,8 @@ namespace LostAngeles.Server
             {
                 LogConfig.AddRule(minLevel, LogLevel.Fatal, target);
             }
-
+            LogManager.Configuration = LogConfig;
+            
             Log.Info("Logger configured.");
         }
 

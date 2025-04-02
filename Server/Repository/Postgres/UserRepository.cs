@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LostAngeles.Server.Domain;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace LostAngeles.Server.Repository.Postgres
 {
@@ -39,6 +40,28 @@ namespace LostAngeles.Server.Repository.Postgres
             }
 
             return null;
+        }
+
+        public async Task<bool> UpdateCharacter(string license, string character)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+                const string query = @"
+                    UPDATE users 
+                    SET Character = @Character
+                    WHERE License = @License";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@License", license);
+                    command.Parameters.AddWithValue("@Character", NpgsqlDbType.Jsonb, 
+                        string.IsNullOrEmpty(character) ? (object)DBNull.Value : character);
+                    
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+                    return affectedRows != 0;
+                }
+            }
         }
     }
 }

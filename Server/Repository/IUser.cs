@@ -6,5 +6,6 @@ namespace LostAngeles.Server.Repository
     public interface IUser
     {
         Task<User> GetOrCreate(string license);
+        Task<bool> UpdateCharacter(string license, string character);
     }
 }

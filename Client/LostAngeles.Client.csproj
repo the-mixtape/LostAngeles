@@ -3,6 +3,9 @@
         <Compile Include="../Shared/**/*.cs" />
     </ItemGroup>
     <ItemGroup>
+      <Reference Include="NativeUI">
+        <HintPath>..\Libs\NativeUI.dll</HintPath>
+      </Reference>
       <Reference Include="Newtonsoft.Json">
         <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
       </Reference>

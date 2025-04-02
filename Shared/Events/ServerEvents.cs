@@ -20,6 +20,7 @@
         public abstract class GameMode
         {
             public const string InitializeCharacterEvent = "GameMode::InitializeCharacter";
+            public const string FinishedCustomizeCharacter = "GameMode::FinishedCustomizeCharacter";
         }
     }
 }

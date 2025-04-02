@@ -35,8 +35,6 @@ namespace LostAngeles.Server.Core
         {
             var licenseIdentifier = Helper.GetLicense(source);
             Log.Info($"Connecting: '{source.Name}' (" +
-                     $"steam: {source.Identifiers.Where(i => i.Contains("steam")).FirstOrDefault().ToString()} " +
-                     $"ip: {source.Identifiers.Where(i => i.Contains("ip")).FirstOrDefault().ToString()} " +
                      $"license: {licenseIdentifier}" +
                      $") | Player count {_activePlayers.Count}/{_maxClients}");
 

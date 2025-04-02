@@ -6,7 +6,7 @@ using LostAngeles.Shared;
 
 namespace LostAngeles.Client.Core
 {
-    public class SpawnManager : BaseScript
+    public class SpawnHelper : BaseScript
     {
         private const int FadeOutTime = 500;
         private const int FadeInTime = 500;
