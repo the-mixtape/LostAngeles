@@ -6,6 +6,7 @@ using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using LostAngeles.Server.Domain;
 using LostAngeles.Server.Repository;
+using LostAngeles.Shared;
 using NLog;
 
 namespace LostAngeles.Server.Core
@@ -24,7 +25,7 @@ namespace LostAngeles.Server.Core
             EventHandlers["playerConnecting"] +=
                 new Action<CitizenFX.Core.Player, string, CallbackDelegate>(OnPlayerConnecting);
             EventHandlers["playerDropped"] += new Action<CitizenFX.Core.Player, string>(OnPlayerDropped);
-            EventHandlers["HardCap::PlayerActivated"] += new Action<CitizenFX.Core.Player>(OnPlayerActivated);
+            EventHandlers[ServerEvents.HardCap.PlayerActivatedEvent] += new Action<CitizenFX.Core.Player>(OnPlayerActivated);
 
             _maxClients = API.GetConvarInt("sv_maxclients", 32);
         }
@@ -32,10 +33,11 @@ namespace LostAngeles.Server.Core
         private void OnPlayerConnecting([FromSource] CitizenFX.Core.Player source, string playerName,
             CallbackDelegate setKickReason)
         {
+            var licenseIdentifier = Helper.GetLicense(source);
             Log.Info($"Connecting: '{source.Name}' (" +
                      $"steam: {source.Identifiers.Where(i => i.Contains("steam")).FirstOrDefault().ToString()} " +
                      $"ip: {source.Identifiers.Where(i => i.Contains("ip")).FirstOrDefault().ToString()} " +
-                     $"license: {source.Identifiers["license"]}" +
+                     $"license: {licenseIdentifier}" +
                      $") | Player count {_activePlayers.Count}/{_maxClients}");
 
 
@@ -77,11 +79,11 @@ namespace LostAngeles.Server.Core
             }
 
             Blacklist blacklist = await BlacklistRepo.GetByLicenseAsync(licenseIdentifier);
-            Log.Debug($"Blacklist for license:{licenseIdentifier} = {blacklist}");
             if (blacklist != null)
             {
                 var reason =
                     $"You have been kicked (Reason: [Banned])! Ban reason: {blacklist.Reason}. If you think this is a bug, please contact the server administration (Identifier: [{licenseIdentifier}]).";
+                Log.Info($"Player '{source.Name}' dropped. Reason: {reason}.");
                 API.DropPlayer(source.Handle, reason);
             }
         }

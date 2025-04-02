@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
@@ -5,6 +6,7 @@ using LostAngeles.Server.Config;
 using LostAngeles.Server.Core;
 using LostAngeles.Server.Repository;
 using LostAngeles.Server.Repository.Postgres;
+using LostAngeles.Shared;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -23,11 +25,13 @@ namespace LostAngeles.Server
         private static GlobalConfig Config { get; set; }
 
         public ServerMain()
-        {
+        {   
             PreInitializeLogger();
             ReadConfig();
             InitializeLogger(Config.LogConfig.LogsPath, Config.LogConfig.LogLevel);
             InitializeRepository(Config.DatabaseConfig.ConnectionString);
+            
+            EventHandlers[ServerEvents.Server.RequestClientConfigEvent] += new Action<CitizenFX.Core.Player>(OnRequestClientConfig);
         }
 
         private void ReadConfig()
@@ -89,8 +93,17 @@ namespace LostAngeles.Server
         {
             Repository.Postgres.PostgresRepository.Initialize(connectionString);
             IBlacklist blacklist = PostgresRepository.Blacklist;
+            IUser user = PostgresRepository.User;
             
             HardCap.BlacklistRepo = blacklist;
+            GameMode.UserRepo = user;
+        }
+
+        private void OnRequestClientConfig([FromSource] CitizenFX.Core.Player source)
+        {
+            var config = Config.ClientConfig;
+            var data = Converter.ToJson(config);
+            TriggerClientEvent(source, ClientEvents.Client.SetupClientConfigEvent, data);
         }
     }
 }

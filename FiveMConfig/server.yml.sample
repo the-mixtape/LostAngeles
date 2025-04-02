@@ -10,3 +10,5 @@ LogConfig:
   LogLevel: 2 # Trace - 0, Debug - 1, Info - 2, Warn - 3, Error - 4, Fatal - 5
 DatabaseConfig:
   ConnectionString: "Host=;Database=;Username=;Password="
+ClientConfig:
+  Test: 1

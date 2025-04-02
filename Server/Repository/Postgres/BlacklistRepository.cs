@@ -15,8 +15,8 @@ namespace LostAngeles.Server.Repository.Postgres
                 {
                     await connection.OpenAsync();
                     
-                    const string query = "SELECT License, BlockedAt, Reason FROM Blacklist WHERE License = @License";
-                    using (var command = new NpgsqlCommand(query, connection))
+                    const string sql = "SELECT License, BlockedAt, Reason FROM Blacklist WHERE License = @License";
+                    using (var command = new NpgsqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@License", license);
                         using (var reader = await command.ExecuteReaderAsync())

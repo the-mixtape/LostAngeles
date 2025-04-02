@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using LostAngeles.Shared;
 
 namespace LostAngeles.Client.Core
 {
@@ -11,11 +12,11 @@ namespace LostAngeles.Client.Core
             Tick += PlayerActivatedCheck;
         }
 
-        async Task PlayerActivatedCheck()
+        private async Task PlayerActivatedCheck()
         {
             if (API.NetworkIsSessionStarted())
             {
-                TriggerServerEvent("HardCap::PlayerActivated");
+                TriggerServerEvent(ServerEvents.HardCap.PlayerActivatedEvent);
                 Tick -= PlayerActivatedCheck;
             }
             await Task.FromResult(0);

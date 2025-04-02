@@ -9,6 +9,7 @@ namespace LostAngeles.Server.Config
         public List<SpawnPosition> SpawnPositions { get; set; }
         public LogConfig LogConfig { get; set; }
         public DatabaseConfig DatabaseConfig { get; set; }
+        public ClientConfig ClientConfig { get; set; }
     }
 
     public class LogConfig

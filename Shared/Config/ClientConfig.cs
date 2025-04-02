@@ -2,6 +2,6 @@
 {
     public class ClientConfig
     {
-        
+        public int Test { get; set; }
     }
 }
