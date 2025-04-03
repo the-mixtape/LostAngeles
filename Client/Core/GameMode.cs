@@ -126,6 +126,8 @@ namespace LostAngeles.Client.Core
             // API.DisplayRadar(false);
             
             await SpawnHelper.SpawnAsync(_characterEditPosition);
+            
+            ControlController.TogglePlayerControl(false);
             TriggerEvent(ClientEvents.CharacterCustomization.StartCustomizeEvent);
         }
 
