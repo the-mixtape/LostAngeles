@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using LostAngeles.Client.Core.Player;
 using LostAngeles.Shared;
 using LostAngeles.Shared.Config;
 
@@ -37,6 +38,8 @@ namespace LostAngeles.Client
         private void OnSetupClientConfig(string data)
         {
             _config = Converter.FromJson<ClientConfig>(data);
+            CrouchCrawl.Initialize(_config.CanCrouch, _config.CanCrawl);
+            PositionUpdater.Initialize(_config.PositionUpdateDelay);
             
             TriggerEvent(ClientEvents.GameMode.InitializeEvent);
         }

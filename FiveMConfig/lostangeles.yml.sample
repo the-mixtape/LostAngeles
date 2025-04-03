@@ -11,4 +11,6 @@ LogConfig:
 DatabaseConfig:
   ConnectionString: "Host=;Database=;Username=;Password="
 ClientConfig:
-  Test: 1
+  CanCrouch: true
+  CanCrawl: true
+  PositionUpdateDelay: 10000

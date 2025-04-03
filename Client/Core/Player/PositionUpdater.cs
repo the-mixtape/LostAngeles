@@ -8,7 +8,7 @@ namespace LostAngeles.Client.Core.Player
 {
     public class PositionUpdater : BaseScript
     {
-        private const int TickDelay = 10 * 1000; //TODO: to config
+        private static int TickDelay { get; set; } = 10 * 1000;
 
         private static bool _enabled = false;
         private PlayerPosition _lastPosition;
@@ -16,6 +16,11 @@ namespace LostAngeles.Client.Core.Player
         public PositionUpdater()
         {
             Tick += UpdatePositionTick;
+        }
+
+        public static void Initialize(int tickDelay)
+        {
+            TickDelay = tickDelay;
         }
 
         public static void Enable()

@@ -22,5 +22,10 @@
             public const string RefreshModelEvent = "CharacterCustomization::RefreshModel";
             public const string OnFinishedCallback = "CharacterCustomization::OnFinishedCallback";
         }
+
+        public abstract class Player
+        {
+            public const string RegisterCrouchCrawlEvent = "Player::RegisterCrouchCrawl";
+        }
     }   
 }

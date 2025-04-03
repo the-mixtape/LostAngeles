@@ -38,7 +38,7 @@ namespace LostAngeles.Server
 
         private void ReadConfig()
         {
-            var filePath = Path.Combine(API.GetResourcePath(API.GetCurrentResourceName()), "server.yml");
+            var filePath = Path.Combine(API.GetResourcePath(API.GetCurrentResourceName()), "lostangeles.yml");
             if (string.IsNullOrEmpty(filePath))
             {
                 throw new FileNotFoundException($"The server configuration file could not be found. Config: {filePath}.");
