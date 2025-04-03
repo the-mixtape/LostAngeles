@@ -23,14 +23,14 @@ namespace LostAngeles.Server.Core
             var licenseIdentifier = Helper.GetLicense(source);
             if (string.IsNullOrEmpty(licenseIdentifier))
             {
-                API.DropPlayer(source.Handle, "Error receiving license identifier");
+                API.DropPlayer(source.Handle, "Error receiving license identifier.");
                 return;
             }
          
             var user = await UserRepo.GetOrCreate(licenseIdentifier);
             if (user == null)
             {
-                // TODO: do something
+                API.DropPlayer(source.Handle, "Couldn't get user information, try again later.");
                 return;
             }
             
@@ -40,8 +40,11 @@ namespace LostAngeles.Server.Core
             }
             else
             {
-                // send Character json to Client
+                var data = user.Character;
+                TriggerClientEvent(source, ClientEvents.GameMode.SetupCharacter, data);
             }
+
+            SpawnUser(source, user);
         }
 
 
@@ -60,8 +63,21 @@ namespace LostAngeles.Server.Core
                 API.DropPlayer(source.Handle, "Couldn't save the character, please try again later.");
                 return;
             }
-            
             Log.Info($"Successfully updated the character ({source.Name}|{licenseIdentifier}).");
+            
+            var user = await UserRepo.GetOrCreate(licenseIdentifier);
+            if (user == null)
+            {
+                API.DropPlayer(source.Handle, "Couldn't get user information, try again later.");
+                return;
+            }
+            
+            SpawnUser(source, user);
+        }
+
+        private void SpawnUser([FromSource] CitizenFX.Core.Player player, Domain.User user)
+        {
+            Log.Info($"Spawn {player.Name}#{user.Id}");
         }
         
     }

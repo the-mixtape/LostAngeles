@@ -2,6 +2,6 @@
 {
     public static class ClientData
     {
-        public static readonly Character Character = new Character();
+        public static Character Character = new Character();
     }
 }

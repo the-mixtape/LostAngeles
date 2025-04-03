@@ -31,9 +31,10 @@ namespace LostAngeles.Client.Core.CharacterCustomizer
         {
             EventHandlers[ClientEvents.CharacterCustomization.StartCustomizeEvent] += new Action(OnStartCustomize);
             EventHandlers[ClientEvents.CharacterCustomization.EndCustomizeEvent] += new Action(OnEndCustomize);
+            EventHandlers[ClientEvents.CharacterCustomization.RefreshModelEvent] += new Action(OnRefreshModel);
         }
 
-        public static async Task RefreshModel()
+        private static async Task RefreshModel()
         {
             var playerPed = API.PlayerPedId();
 
@@ -81,6 +82,11 @@ namespace LostAngeles.Client.Core.CharacterCustomizer
             DeleteCameras();
             
             TriggerEvent(ClientEvents.CharacterCustomization.OnFinishedCallback);
+        }
+
+        private async void OnRefreshModel()
+        {
+            await RefreshModel();
         }
 
         private void CreateCameras()

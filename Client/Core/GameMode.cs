@@ -34,6 +34,7 @@ namespace LostAngeles.Client.Core
         {
             EventHandlers[ClientEvents.GameMode.InitializeEvent] += new Action(OnStartInitialize);
             EventHandlers[ClientEvents.GameMode.CustomizeCharacter] += new Action(OnCustomizeCharacter);
+            EventHandlers[ClientEvents.GameMode.SetupCharacter] += new Action<string>(OnSetupCharacter);
             
             EventHandlers[ClientEvents.CharacterCustomization.OnFinishedCallback] += new Action(OnCustomizerFinished);
         }
@@ -46,6 +47,12 @@ namespace LostAngeles.Client.Core
         private void OnCustomizeCharacter()
         {
             Status = GameStatus.CharacterCustomization;
+        }
+
+        private void OnSetupCharacter(string data)
+        {
+            ClientData.Character = Converter.FromJson<Character>(data);
+            TriggerEvent(ClientEvents.CharacterCustomization.RefreshModelEvent);
         }
 
         private void OnCustomizerFinished()

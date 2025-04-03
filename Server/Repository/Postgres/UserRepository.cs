@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using LostAngeles.Server.Domain;
 using Npgsql;
@@ -18,7 +19,7 @@ namespace LostAngeles.Server.Repository.Postgres
                     VALUES (@License) 
                     ON CONFLICT (license) DO UPDATE 
                         SET License = EXCLUDED.License 
-                    RETURNING Id, License, Character";
+                    RETURNING Id, License, Character, Position";
 
                 using (var command = new NpgsqlCommand(query, connection))
                 {
@@ -31,7 +32,8 @@ namespace LostAngeles.Server.Repository.Postgres
                             {
                                 Id = reader.GetInt32(0),
                                 License = reader.GetString(1),
-                                Character = reader.IsDBNull(2) ? null : reader.GetString(2)
+                                Character = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                Position = reader.IsDBNull(3) ? null : ReadPosition(reader.GetString(3)),
                             };
                             return user;
                         }
@@ -55,13 +57,30 @@ namespace LostAngeles.Server.Repository.Postgres
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@License", license);
-                    command.Parameters.AddWithValue("@Character", NpgsqlDbType.Jsonb, 
+                    command.Parameters.AddWithValue("@Character", NpgsqlDbType.Jsonb,
                         string.IsNullOrEmpty(character) ? (object)DBNull.Value : character);
-                    
+
                     int affectedRows = await command.ExecuteNonQueryAsync();
                     return affectedRows != 0;
                 }
             }
+        }
+
+        private Position ReadPosition(object dbValue)
+        {
+            if (dbValue is string strValue)
+            {
+                var values = strValue.Trim('(', ')').Split(',');
+                return new Position
+                {
+                    X = float.Parse(values[0], CultureInfo.InvariantCulture),
+                    Y = float.Parse(values[1], CultureInfo.InvariantCulture),
+                    Z = float.Parse(values[2], CultureInfo.InvariantCulture),
+                    Heading = float.Parse(values[3], CultureInfo.InvariantCulture),
+                };
+            }
+
+            return null;
         }
     }
 }
