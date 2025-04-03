@@ -14,17 +14,17 @@ namespace LostAngeles.Client.Core
 
         private static bool _spawnLock;
 
-        public static void Spawn(SpawnPosition position, Action callback = null)
+        public static void Spawn(PlayerPosition position, Action callback = null)
         {
             _ = AsyncSpawn(position, callback);
         }
 
-        public static async Task SpawnAsync(SpawnPosition position)
+        public static async Task SpawnAsync(PlayerPosition position)
         {
             await AsyncSpawn(position, null);
         }
 
-        private static async Task AsyncSpawn(SpawnPosition position, Action callback)
+        private static async Task AsyncSpawn(PlayerPosition position, Action callback)
         {
             if (_spawnLock)
             {

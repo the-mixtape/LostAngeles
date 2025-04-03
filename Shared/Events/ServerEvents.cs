@@ -22,5 +22,10 @@
             public const string InitializeCharacterEvent = "GameMode::InitializeCharacter";
             public const string FinishedCustomizeCharacter = "GameMode::FinishedCustomizeCharacter";
         }
+        
+        public abstract class PositionUpdater
+        {
+            public const string UpdatePositionEvent = "PositionUpdater::UpdatePosition";
+        }
     }
 }

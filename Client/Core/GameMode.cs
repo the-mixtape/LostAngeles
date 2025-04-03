@@ -32,8 +32,8 @@ namespace LostAngeles.Client.Core
             await Update();
         }
 
-        private readonly SpawnPosition
-            _characterEditPosition = new SpawnPosition(402.89f, -996.87f, -99.0f, 180);
+        private readonly PlayerPosition
+            _characterEditPosition = new PlayerPosition(402.89f, -996.87f, -99.0f, 180);
 
         private const int SpawnFadeOutInTime = 1500;
 
@@ -62,7 +62,7 @@ namespace LostAngeles.Client.Core
         {
             await SetStatus(GameStatus.Spawning);
 
-            var position = Converter.FromJson<SpawnPosition>(data);
+            var position = Converter.FromJson<PlayerPosition>(data);
 
             await SpawnHelper.SpawnAsync(position);
             await SetStatus(GameStatus.Gameplay);
@@ -145,6 +145,8 @@ namespace LostAngeles.Client.Core
             
             ControlController.TogglePlayerControl(true);
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Default);
+            
+            Player.PositionUpdater.Enable();
             
             await Task.FromResult(0);
         }

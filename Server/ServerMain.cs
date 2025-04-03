@@ -4,6 +4,7 @@ using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using LostAngeles.Server.Config;
 using LostAngeles.Server.Core;
+using LostAngeles.Server.Core.Player;
 using LostAngeles.Server.Repository;
 using LostAngeles.Server.Repository.Postgres;
 using LostAngeles.Shared;
@@ -99,6 +100,7 @@ namespace LostAngeles.Server
             
             HardCap.BlacklistRepo = blacklist;
             GameMode.UserRepo = user;
+            PositionUpdater.UserRepo = user;
         }
 
         private void InitializeSpawnHelper()

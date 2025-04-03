@@ -15,14 +15,14 @@ namespace LostAngeles.Server.Core
 
         public SessionManager()
         {
-            EventHandlers["hostingSession"] += new Action<Player>(OnHostingSession);
-            EventHandlers["hostedSession"] += new Action<Player>(OnHostedSession);
+            EventHandlers["hostingSession"] += new Action<CitizenFX.Core.Player>(OnHostingSession);
+            EventHandlers["hostedSession"] += new Action<CitizenFX.Core.Player>(OnHostedSession);
 
             API.EnableEnhancedHostSupport(true);
             Log.Debug("SessionManager initialized");
         }
 
-        private void OnHostingSession([FromSource] Player source)
+        private void OnHostingSession([FromSource] CitizenFX.Core.Player source)
         {
             if (!String.IsNullOrEmpty(_currentlyHosting))
             {
@@ -58,7 +58,7 @@ namespace LostAngeles.Server.Core
             _hostReleaseCallbacks.ForEach(f => f());
         }
 
-        private void OnHostedSession([FromSource] Player source)
+        private void OnHostedSession([FromSource] CitizenFX.Core.Player source)
         {
             if (_currentlyHosting != source.Handle && !String.IsNullOrEmpty(_currentlyHosting))
             {

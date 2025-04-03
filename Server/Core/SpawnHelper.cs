@@ -9,10 +9,10 @@ namespace LostAngeles.Server.Core
     {
         private static readonly Logger Log = LogManager.GetLogger("SPAWNHELPER");
         
-        private static List<SpawnPosition> _spawnPositions;
+        private static List<PlayerPosition> _spawnPositions;
         private static int _lastSpawnIndex = 0;
 
-        public static void InitializePositions(List<SpawnPosition> positions)
+        public static void InitializePositions(List<PlayerPosition> positions)
         {
             _spawnPositions = positions;
             _spawnPositions.Shuffle();
@@ -20,13 +20,13 @@ namespace LostAngeles.Server.Core
             Log.Info($"Initialized positions[{positions.Count}].");
         }
         
-        public static SpawnPosition GetNextSpawnPosition()
+        public static PlayerPosition GetNextSpawnPosition()
         {
             _lastSpawnIndex = (_lastSpawnIndex + 1) % _spawnPositions.Count;
             return _spawnPositions[_lastSpawnIndex];
         }
 
-        private static void Shuffle(this IList<SpawnPosition> positions)
+        private static void Shuffle(this IList<PlayerPosition> positions)
         {
             var rng = new Random();
             var n = positions.Count;

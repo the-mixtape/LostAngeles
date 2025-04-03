@@ -77,11 +77,11 @@ namespace LostAngeles.Server.Core
 
         private async Task SpawnUser([FromSource] CitizenFX.Core.Player player, Domain.User user)
         {
-            SpawnPosition spawnPosition = user.Position?.ToSpawnPosition();
+            PlayerPosition playerPosition = user.Position?.ToSpawnPosition();
             if (user.Position == null)
             {
-                spawnPosition = SpawnHelper.GetNextSpawnPosition();
-                var position = spawnPosition.ToPosition();
+                playerPosition = SpawnHelper.GetNextSpawnPosition();
+                var position = playerPosition.ToPosition();
                 var success = await UserRepo.UpdatePosition(user.License, position);
                 if (!success)
                 {   
@@ -90,17 +90,17 @@ namespace LostAngeles.Server.Core
                 }
             }
 
-            if (spawnPosition == null)
+            if (playerPosition == null)
             {
                 Log.Error("Spawn position is null.");
                 API.DropPlayer(player.Handle, "Couldn't get spawn position, please try again later.");
                 return;
             }
             
-            var data = Converter.ToJson(spawnPosition);
+            var data = Converter.ToJson(playerPosition);
             TriggerClientEvent(player, ClientEvents.GameMode.SpawnPlayer, data);
 
-            Log.Debug($"Spawning {player.Name}#{user.Id} at {spawnPosition}");
+            Log.Debug($"Spawning {player.Name}#{user.Id} at {playerPosition}");
         }
     }
 }

@@ -5,20 +5,20 @@ namespace LostAngeles.Server.Core
 {
     public static class PositionConverter
     {
-        public static Position ToPosition(this SpawnPosition spawnPos)
+        public static Position ToPosition(this PlayerPosition playerPos)
         {
             return new Position
             {
-                X = spawnPos.Location.X,
-                Y = spawnPos.Location.Y,
-                Z = spawnPos.Location.Z,
-                Heading = spawnPos.Heading
+                X = playerPos.Location.X,
+                Y = playerPos.Location.Y,
+                Z = playerPos.Location.Z,
+                Heading = playerPos.Heading
             };
         }
 
-        public static SpawnPosition ToSpawnPosition(this Position pos)
+        public static PlayerPosition ToSpawnPosition(this Position pos)
         {
-            return new SpawnPosition(pos.X, pos.Y, pos.Z, pos.Heading);
+            return new PlayerPosition(pos.X, pos.Y, pos.Z, pos.Heading);
         }
     }
 }

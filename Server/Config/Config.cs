@@ -6,7 +6,7 @@ namespace LostAngeles.Server.Config
 {
     public class GlobalConfig
     {
-        public List<SpawnPosition> SpawnPositions { get; set; }
+        public List<PlayerPosition> SpawnPositions { get; set; }
         public LogConfig LogConfig { get; set; }
         public DatabaseConfig DatabaseConfig { get; set; }
         public ClientConfig ClientConfig { get; set; }

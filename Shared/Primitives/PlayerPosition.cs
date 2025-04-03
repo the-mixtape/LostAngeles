@@ -5,7 +5,7 @@ namespace LostAngeles.Shared
     /// <summary>
     /// Represents spawn information, including coordinates and heading for an entity.
     /// </summary>
-    public class SpawnPosition
+    public class PlayerPosition
     {
         /// <summary>
         /// Gets or sets of the spawn location.
@@ -17,13 +17,13 @@ namespace LostAngeles.Shared
         /// </summary>
         public float Heading { get; set; }
 
-        public SpawnPosition()
+        public PlayerPosition()
         {
             this.Location = Vector3.Zero;
             this.Heading = 0f;
         }
 
-        public SpawnPosition(float x, float y, float z, float heading)
+        public PlayerPosition(float x, float y, float z, float heading)
         {
             this.Location = new Vector3(x, y, z);
             this.Heading = heading;
@@ -32,6 +32,19 @@ namespace LostAngeles.Shared
         public override string ToString()
         {
             return $"({this.Location.X}, {this.Location.Y}, {this.Location.Z}, {this.Heading})";
+        }
+
+        public bool Compare(PlayerPosition other, float accuracy = 0.01f)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            
+            return System.Math.Abs(Location.X - other.Location.X) < accuracy &&
+                   System.Math.Abs(Location.Y - other.Location.Y) < accuracy &&
+                   System.Math.Abs(Location.Z - other.Location.Z) < accuracy &&
+                   System.Math.Abs(Heading - other.Heading) < accuracy;
         }
     }
 }
