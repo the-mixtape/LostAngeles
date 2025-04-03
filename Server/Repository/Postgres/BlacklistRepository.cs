@@ -11,25 +11,20 @@ namespace LostAngeles.Server.Repository.Postgres
         {
             try
             {
-                using (var connection = new NpgsqlConnection(ConnectionString))
+                const string query = "SELECT License, BlockedAt, Reason FROM Blacklist WHERE License = @License";
+                using (var command = DataSource.CreateCommand(query))
                 {
-                    await connection.OpenAsync();
-                    
-                    const string sql = "SELECT License, BlockedAt, Reason FROM Blacklist WHERE License = @License";
-                    using (var command = new NpgsqlCommand(sql, connection))
+                    command.Parameters.AddWithValue("@License", license);
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        command.Parameters.AddWithValue("@License", license);
-                        using (var reader = await command.ExecuteReaderAsync())
+                        if (await reader.ReadAsync())
                         {
-                            if (await reader.ReadAsync())
+                            return new Blacklist
                             {
-                                return new Blacklist
-                                {
-                                    License = reader.GetString(0),
-                                    BlockedAt = reader.GetFieldValue<DateTimeOffset>(1),
-                                    Reason = reader.IsDBNull(2) ? null : reader.GetString(2)
-                                };
-                            }
+                                License = reader.GetString(0),
+                                BlockedAt = reader.GetFieldValue<DateTimeOffset>(1),
+                                Reason = reader.IsDBNull(2) ? null : reader.GetString(2)
+                            };
                         }
                     }
                 }

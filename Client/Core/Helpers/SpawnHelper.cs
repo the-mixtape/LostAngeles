@@ -19,6 +19,11 @@ namespace LostAngeles.Client.Core
             _ = AsyncSpawn(position, callback);
         }
 
+        public static async Task SpawnAsync(SpawnPosition position)
+        {
+            await AsyncSpawn(position, null);
+        }
+
         private static async Task AsyncSpawn(SpawnPosition position, Action callback)
         {
             if (_spawnLock)

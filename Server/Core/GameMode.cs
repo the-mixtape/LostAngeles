@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using LostAngeles.Server.Repository;
@@ -37,14 +38,13 @@ namespace LostAngeles.Server.Core
             if (string.IsNullOrEmpty(user.Character))
             {
                 TriggerClientEvent(source, ClientEvents.GameMode.CustomizeCharacter);
+                return;
             }
-            else
-            {
-                var data = user.Character;
-                TriggerClientEvent(source, ClientEvents.GameMode.SetupCharacter, data);
-            }
+            
+            var data = user.Character;
+            TriggerClientEvent(source, ClientEvents.GameMode.SetupCharacter, data);
 
-            SpawnUser(source, user);
+            await SpawnUser(source, user);
         }
 
 
@@ -72,13 +72,35 @@ namespace LostAngeles.Server.Core
                 return;
             }
             
-            SpawnUser(source, user);
+            await SpawnUser(source, user);
         }
 
-        private void SpawnUser([FromSource] CitizenFX.Core.Player player, Domain.User user)
+        private async Task SpawnUser([FromSource] CitizenFX.Core.Player player, Domain.User user)
         {
-            Log.Info($"Spawn {player.Name}#{user.Id}");
+            SpawnPosition spawnPosition = user.Position?.ToSpawnPosition();
+            if (user.Position == null)
+            {
+                spawnPosition = SpawnHelper.GetNextSpawnPosition();
+                var position = spawnPosition.ToPosition();
+                var success = await UserRepo.UpdatePosition(user.License, position);
+                if (!success)
+                {   
+                    API.DropPlayer(player.Handle, "Couldn't save the position, please try again later.");
+                    return;
+                }
+            }
+
+            if (spawnPosition == null)
+            {
+                Log.Error("Spawn position is null.");
+                API.DropPlayer(player.Handle, "Couldn't get spawn position, please try again later.");
+                return;
+            }
+            
+            var data = Converter.ToJson(spawnPosition);
+            TriggerClientEvent(player, ClientEvents.GameMode.SpawnPlayer, data);
+
+            Log.Debug($"Spawning {player.Name}#{user.Id} at {spawnPosition}");
         }
-        
     }
 }

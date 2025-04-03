@@ -7,5 +7,6 @@ namespace LostAngeles.Server.Repository
     {
         Task<User> GetOrCreate(string license);
         Task<bool> UpdateCharacter(string license, string character);
+        Task<bool> UpdatePosition(string license, Position position);
     }
 }

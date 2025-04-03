@@ -33,8 +33,8 @@ namespace LostAngeles.Client.Core.CharacterCustomizer
             EventHandlers[ClientEvents.CharacterCustomization.EndCustomizeEvent] += new Action(OnEndCustomize);
             EventHandlers[ClientEvents.CharacterCustomization.RefreshModelEvent] += new Action(OnRefreshModel);
         }
-
-        private static async Task RefreshModel()
+        
+        public static async Task RefreshModel()
         {
             var playerPed = API.PlayerPedId();
 

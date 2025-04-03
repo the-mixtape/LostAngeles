@@ -31,7 +31,7 @@ namespace LostAngeles.Shared
 
         public override string ToString()
         {
-            return $"({this.Location.X}, {this.Location.Y}, {this.Location.Z})";
+            return $"({this.Location.X}, {this.Location.Y}, {this.Location.Z}, {this.Heading})";
         }
     }
 }

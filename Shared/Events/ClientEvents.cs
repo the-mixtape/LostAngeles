@@ -12,6 +12,7 @@
             public const string InitializeEvent = "GameMode::Initialize";
             public const string CustomizeCharacter = "GameMode::CustomizeCharacter";
             public const string SetupCharacter = "GameMode::SetupCharacter";
+            public const string SpawnPlayer = "GameMode::SpawnPlayer";
         }
 
         public abstract class CharacterCustomization

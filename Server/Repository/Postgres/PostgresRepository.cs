@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Npgsql;
 
 namespace LostAngeles.Server.Repository.Postgres
 {
@@ -10,8 +11,7 @@ namespace LostAngeles.Server.Repository.Postgres
 
         public static void Initialize(string connectionString)
         {
-            User.ConnectionString = connectionString;
-            Blacklist.ConnectionString = connectionString;
+            BaseRepository.ConnectionString = connectionString;
         }
     }
 }

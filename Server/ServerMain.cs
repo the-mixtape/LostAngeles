@@ -28,8 +28,9 @@ namespace LostAngeles.Server
         {   
             PreInitializeLogger();
             ReadConfig();
-            InitializeLogger(Config.LogConfig.LogsPath, Config.LogConfig.LogLevel);
-            InitializeRepository(Config.DatabaseConfig.ConnectionString);
+            InitializeLogger();
+            InitializeRepository();
+            InitializeSpawnHelper();
             
             EventHandlers[ServerEvents.Server.RequestClientConfigEvent] += new Action<CitizenFX.Core.Player>(OnRequestClientConfig);
         }
@@ -67,12 +68,12 @@ namespace LostAngeles.Server
             LogManager.Configuration = LogConfig;
         }
         
-        private void InitializeLogger(string logPath, int logLevel)
+        private void InitializeLogger()
         {
             var fileTarget = new FileTarget("file")
             {
-                FileName = Path.Combine(logPath, "server.log"),
-                ArchiveFileName = Path.Combine(logPath, "server_${date:format=dd_MM_yyyy}.log"),
+                FileName = Path.Combine(Config.LogConfig.LogsPath, "server.log"),
+                ArchiveFileName = Path.Combine(Config.LogConfig.LogsPath, "server_${date:format=dd_MM_yyyy}.log"),
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveNumbering = ArchiveNumberingMode.Date,
                 MaxArchiveFiles = 30,
@@ -80,7 +81,7 @@ namespace LostAngeles.Server
             };
             LogConfig.AddTarget(fileTarget);
 
-            var minLevel = LogLevel.FromOrdinal(logLevel);
+            var minLevel = LogLevel.FromOrdinal(Config.LogConfig.LogLevel);
             foreach (var target in LogConfig.AllTargets)
             {
                 LogConfig.AddRule(minLevel, LogLevel.Fatal, target);
@@ -90,14 +91,19 @@ namespace LostAngeles.Server
             Log.Info("Logger configured.");
         }
 
-        private void InitializeRepository(string connectionString)
+        private void InitializeRepository()
         {
-            Repository.Postgres.PostgresRepository.Initialize(connectionString);
+            Repository.Postgres.PostgresRepository.Initialize(Config.DatabaseConfig.ConnectionString);
             IBlacklist blacklist = PostgresRepository.Blacklist;
             IUser user = PostgresRepository.User;
             
             HardCap.BlacklistRepo = blacklist;
             GameMode.UserRepo = user;
+        }
+
+        private void InitializeSpawnHelper()
+        {
+            SpawnHelper.InitializePositions(Config.SpawnPositions);
         }
 
         private void OnRequestClientConfig([FromSource] CitizenFX.Core.Player source)
