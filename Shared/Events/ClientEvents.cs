@@ -23,9 +23,16 @@
             public const string OnFinishedCallback = "CharacterCustomization::OnFinishedCallback";
         }
 
-        public abstract class Player
+        public abstract class Player 
         {
             public const string RegisterCrouchCrawlEvent = "Player::RegisterCrouchCrawl";
+        }
+
+        public abstract class Weather
+        {
+            public const string UpdateWeatherEvent = "Weather::UpdateWeather";
+            public const string UpdateTimeEvent = "Weather::UpdateTime";
+            public const string NotifyEvent = "Weather::Notify";
         }
     }   
 }

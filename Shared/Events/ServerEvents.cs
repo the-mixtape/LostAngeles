@@ -27,5 +27,14 @@
         {
             public const string UpdatePositionEvent = "PositionUpdater::UpdatePosition";
         }
+
+        public abstract class Weather
+        {
+            public const string RequestSyncEvent = "Weather::RequestSync";
+            public const string SetTimeEvent = "Weather::SetTime";
+            public const string SetWeatherEvent = "Weather::SetWeather";
+            public const string FreezeTimeEvent = "Weather::FreezeTime";
+            public const string FreezeWeatherEvent = "Weather::FreezeWeather";
+        }
     }
 }
