@@ -34,5 +34,11 @@
             public const string UpdateTimeEvent = "Weather::UpdateTime";
             public const string NotifyEvent = "Weather::Notify";
         }
+
+        public abstract class Commander
+        {
+            public const string InitializeEvent = "Commander::InitializeClient";
+            public const string SetupClientEvent = "Commander::SetupClient";
+        }
     }   
 }

@@ -44,14 +44,16 @@ namespace LostAngeles.Server.Core.Weather
 
         private void OnSetTime([FromSource] CitizenFX.Core.Player source, int hour, int minute)
         {
-            // check is admin
+            if (AdminHelper.IsAdmin(source) == false) return;
+            
             SetTime(hour, minute);
             TriggerClientEvent(source,  ClientEvents.Weather.NotifyEvent, $"Time has changed to {hour:00}:{minute:00}.");
         }
 
         private void OnFreezeTime([FromSource] CitizenFX.Core.Player source, int hour, int minute)
         {
-            // check is admin
+            if (AdminHelper.IsAdmin(source) == false) return;
+            
             _freezeTime = !_freezeTime;
             string message = _freezeTime ? "Time is now frozen." : "Time is no longer frozen.";
             TriggerClientEvent(source, ClientEvents.Weather.NotifyEvent, message);
@@ -59,6 +61,8 @@ namespace LostAngeles.Server.Core.Weather
 
         private void OnSetWeather([FromSource] CitizenFX.Core.Player source, string weather)
         {
+            if (AdminHelper.IsAdmin(source) == false) return;
+            
             if (WeatherTypes.IsValidWeather(weather))
             {
                 _currentWeather = weather;
@@ -70,6 +74,8 @@ namespace LostAngeles.Server.Core.Weather
 
         private void OnFreezeWeather([FromSource] CitizenFX.Core.Player source, int hour, int minute)
         {
+            if (AdminHelper.IsAdmin(source) == false) return;
+            
             _dynamicWeather = !_dynamicWeather;
             string status = _dynamicWeather ? "enabled" : "disabled";
             TriggerClientEvent(source, ClientEvents.Weather.NotifyEvent, $"Dynamic weather changes are now ~r~{status}~s~.");
@@ -159,20 +165,20 @@ namespace LostAngeles.Server.Core.Weather
                 _currentWeather = WeatherTypes.GetWeatherString(WeatherTypes.Types.Clearing);
             }
 
-            TriggerClientEvent("Weather:UpdateWeather", _currentWeather);
+            TriggerClientEvent(ClientEvents.Weather.UpdateWeatherEvent, _currentWeather);
             Log.Info($"New random weather type has been generated: {_currentWeather}");
         }
 
         private async Task AutoUpdateWeather()
         {
             await Delay(300000);
-            TriggerClientEvent("Weather:UpdateWeather", _currentWeather);
+            TriggerClientEvent(ClientEvents.Weather.UpdateWeatherEvent, _currentWeather);
         }
 
         private async Task AutoUpdateTime()
         {
             await Delay(5000);
-            TriggerClientEvent("Weather:UpdateTime", _baseTime, _timeOffset, _freezeTime);
+            TriggerClientEvent(ClientEvents.Weather.UpdateTimeEvent, _baseTime, _timeOffset, _freezeTime);
         }
 
         private async Task UpdateTimeTick()
@@ -209,7 +215,7 @@ namespace LostAngeles.Server.Core.Weather
             minute = Shared.Math.Clamp(minute, 0, 60);
             ShiftToHour(hour);
             ShiftToMinute(minute);
-            TriggerClientEvent("Weather:UpdateTime", _baseTime, _timeOffset, _freezeTime);
+            TriggerClientEvent(ClientEvents.Weather.UpdateTimeEvent, _baseTime, _timeOffset, _freezeTime);
         }
 
         private static void ShiftToHour(int hour)

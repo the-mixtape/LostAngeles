@@ -51,11 +51,18 @@ namespace LostAngeles.Server.Core
 
         private void OnPlayerDropped([FromSource] CitizenFX.Core.Player source, string reason)
         {
+            var ped = API.GetPlayerPed(source.Handle);
+            if (ped != 0)
+            {
+                API.DeleteEntity(ped);
+                Log.Debug($"The player's ped '{source.Name}' has been deleted.");
+            }
+            
             int sessionId = Int32.Parse(source.Handle);
             if (_activePlayers.ContainsKey(sessionId))
             {
                 _activePlayers.Remove(sessionId);
-                Log.Info($"Session#{sessionId} dropped: {reason}");
+                Log.Info($"Session#{sessionId} | Player {source.Name} dropped: {reason}");
             }
 
             TriggerClientEvent("playerDropped", source.Handle, reason);

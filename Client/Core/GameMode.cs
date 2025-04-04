@@ -110,7 +110,7 @@ namespace LostAngeles.Client.Core
         }
 
         private async Task UpdateInitializingStatus()
-        {
+        {   
             ControlController.TogglePlayerControl(false);
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Uniq);
             TriggerServerEvent(ServerEvents.GameMode.InitializeCharacterEvent);

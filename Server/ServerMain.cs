@@ -30,6 +30,7 @@ namespace LostAngeles.Server
             PreInitializeLogger();
             ReadConfig();
             InitializeLogger();
+            InitializeAdminHelper();
             InitializeRepository();
             InitializeSpawnHelper();
             
@@ -106,6 +107,11 @@ namespace LostAngeles.Server
         private void InitializeSpawnHelper()
         {
             SpawnHelper.InitializePositions(Config.SpawnPositions);
+        }
+
+        private void InitializeAdminHelper()
+        {
+            AdminHelper.Initialize(Config.Admins);
         }
 
         private void OnRequestClientConfig([FromSource] CitizenFX.Core.Player source)

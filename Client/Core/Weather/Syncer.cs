@@ -27,9 +27,11 @@ namespace LostAngeles.Client.Core.Weather
             
             Tick += UpdateWeatherTick;
             Tick += UpdateTimeTick;
+            
+            RequestSync();
         }
 
-        public static void RequestSync()
+        private static void RequestSync()
         {
             TriggerServerEvent(ServerEvents.Weather.RequestSyncEvent);
         }
@@ -97,6 +99,11 @@ namespace LostAngeles.Client.Core.Weather
             var hour = (int)((_baseTime + _timeOffset) / 60) % 24;
             var minute = (int)((_baseTime + _timeOffset) % 60);
             return $"{hour:00}:{minute:00}";
+        }
+
+        public static string GetWeatherString()
+        {
+            return _currentWeather;
         }
         
         public static void SetTime(int hour, int minute)

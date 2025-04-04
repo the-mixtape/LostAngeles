@@ -10,6 +10,7 @@ namespace LostAngeles.Server.Config
         public LogConfig LogConfig { get; set; }
         public DatabaseConfig DatabaseConfig { get; set; }
         public ClientConfig ClientConfig { get; set; }
+        public HashSet<string> Admins { get; set; }
     }
 
     public class LogConfig

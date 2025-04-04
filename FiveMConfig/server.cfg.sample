@@ -3,10 +3,11 @@ endpoint_add_tcp "0.0.0.0:30120"
 endpoint_add_udp "0.0.0.0:30120"
 
 # These resources will start by default.
+ensure bob74_ipl
+ensure LostAngeles
 ensure mapmanager
 ensure chat
 ensure chat-theme-gtao
-ensure LostAngeles
 
 # This allows players to use scripthook-based plugins such as the legacy Lambda Menu.
 # Set this to 1 to allow scripthook. Do note that this does _not_ guarantee players won't be able to use external plugins.
@@ -42,7 +43,7 @@ sets sv_projectName "Lost Angeles"
 sets sv_projectDesc "Lost Angeles - The story of your death"
 
 # Set Game Build (https://docs.fivem.net/docs/server-manual/server-commands/#sv_enforcegamebuild-build)
-#sv_enforceGameBuild 2802
+sv_enforceGameBuild 3407
 
 # Nested configs!
 #exec server_internal.cfg
@@ -67,8 +68,7 @@ add_principal identifier.fivem group.user
 # add_principal identifier.fivem:1 group.admin # add the admin to the group
 
 # enable OneSync (required for server-side state awareness)
-# set onesync on
-set onesync infinity
+set onesync on
 set onesync_population false
 
 # Server player slot limit (see https://fivem.net/server-hosting for limits)
@@ -87,3 +87,7 @@ set steam_webApiKey ""
 
 # License key for your server (https://portal.cfx.re)
 sv_licenseKey changeme
+
+# Disable chat Join/Quits notification
+set chat_showJoins 0
+set chat_showQuits 0

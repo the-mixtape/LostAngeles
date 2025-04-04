@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using LostAngeles.Client.Core.Commander;
 using LostAngeles.Client.Core.Player;
 using LostAngeles.Shared;
 using LostAngeles.Shared.Config;
@@ -11,9 +12,14 @@ namespace LostAngeles.Client
     public class ClientMain : BaseScript
     {
         private static ClientConfig _config;
+
+        private const string PauseMenuTitleEntry = "FE_THDR_GTAO";
+        private const string PauseMenuTitle = "Lost Angeles";
         
         public ClientMain()
         {
+            API.AddTextEntry(PauseMenuTitleEntry, PauseMenuTitle);
+            
             Tick += SessionStartedCheck;
 
             EventHandlers[ClientEvents.Client.SetupClientConfigEvent] += new Action<string>(OnSetupClientConfig);
@@ -41,6 +47,7 @@ namespace LostAngeles.Client
             CrouchCrawl.Initialize(_config.CanCrouch, _config.CanCrawl);
             PositionUpdater.Initialize(_config.PositionUpdateDelay);
             
+            TriggerEvent(ClientEvents.Commander.InitializeEvent);
             TriggerEvent(ClientEvents.GameMode.InitializeEvent);
         }
     }
