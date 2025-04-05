@@ -149,6 +149,7 @@ namespace LostAngeles.Client.Core
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Default);
             
             Player.PositionUpdater.Enable();
+            TriggerEvent(ClientEvents.Player.InitializeInputControllerEvent);
             
             await Task.FromResult(0);
         }

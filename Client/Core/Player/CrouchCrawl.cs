@@ -15,7 +15,7 @@ namespace LostAngeles.Client.Core.Player
         private static bool _canCrawl = true;
 
         private const bool CrouchKeyBindEnabled = true;
-        private const string CrouchKeyBind = "LCONTROL";
+        private const string CrouchKeyBind = "C";
         private const string CrouchKeyBindDescription = "Crouch";
         private const string CrouchChatSuggestion = "Crouch";
 

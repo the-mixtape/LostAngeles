@@ -20,5 +20,6 @@ build: clean
 	@copy /y fxmanifest.lua Dist
 	@copy /y FiveMConfig\lostangeles.yml Dist
 	@copy /y FiveMConfig\lostangeles.yml.sample Dist
-	@xcopy /y /e /I Client\bin\Release\net452\publish Dist\Client\bin\Release\net452\publish
-	@xcopy /y /e /I Server\bin\Release\netstandard2.0\publish Dist\Server\bin\Release\netstandard2.0\publish
+	@xcopy /y /e /I Client\NUI\HTML Dist\Client\NUI\HTML
+	@xcopy /y /e /I Client\bin\Release\net452\publish Dist\Client
+	@xcopy /y /e /I Server\bin\Release\netstandard2.0\publish Dist\Server

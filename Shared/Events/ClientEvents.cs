@@ -23,8 +23,9 @@
             public const string OnFinishedCallback = "CharacterCustomization::OnFinishedCallback";
         }
 
-        public abstract class Player 
+        public abstract class Player
         {
+            public const string InitializeInputControllerEvent = "Player::InitializeInputController";
             public const string RegisterCrouchCrawlEvent = "Player::RegisterCrouchCrawl";
         }
 
@@ -40,5 +41,12 @@
             public const string InitializeEvent = "Commander::InitializeClient";
             public const string SetupClientEvent = "Commander::SetupClient";
         }
-    }   
+
+        public abstract class Inventory
+        {
+            public const string OpenInventoryEvent = "Inventory::OpenInventory";
+
+            public const string CloseInventoryNuiCallback = "Inventory::Close";
+        }
+    }
 }
