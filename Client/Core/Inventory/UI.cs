@@ -13,13 +13,23 @@ namespace LostAngeles.Client.Core.Inventory
             public string Type { get; set; }
         }
 
-        private class InventoryMessage : NuiMessage
+        private class DisplayInventoryMessage : NuiMessage
         {
             public bool Display { get; set; }
 
-            public InventoryMessage()
+            public DisplayInventoryMessage()
             {
-                Type = "Inventory";
+                Type = "showInventory";
+            }
+        }
+
+        private class DisplayQuickSlotsMessage : NuiMessage
+        {
+            public bool Display { get; set; }
+
+            public DisplayQuickSlotsMessage()
+            {
+                Type = "showQuickSlots";
             }
         }
 
@@ -55,13 +65,7 @@ namespace LostAngeles.Client.Core.Inventory
 
             PlayHudPostFx(display);
 
-            // var displayString = display.ToString().ToLower();
-            // string json = "{" +
-            // "\"Type\": \"Inventory\"," +
-            // $"\"Display\": {displayString}" +
-            // "}";
-
-            var msg = new InventoryMessage()
+            var msg = new DisplayInventoryMessage()
             {
                 Display = display,
             };
@@ -69,6 +73,17 @@ namespace LostAngeles.Client.Core.Inventory
             var json = Converter.ToJson(msg);
             API.SendNuiMessage(json);
             API.SetNuiFocus(display, display);
+        }
+
+        private void ToggleQuickSlotsVisible(bool display)
+        {
+            var msg = new DisplayQuickSlotsMessage()
+            {
+                Display = display,
+            };
+            
+            var json = Converter.ToJson(msg);
+            API.SendNuiMessage(json);
         }
 
         private static string GetNuiHandlerName(string eventName)

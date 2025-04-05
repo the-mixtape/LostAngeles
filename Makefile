@@ -7,6 +7,9 @@ clean:
 	@if exist Dist rmdir /s /q Dist
 	
 build: clean
+	@echo [BUILD] Building Front project... 
+	@cd Front && npm run build
+
 	@echo [BUILD] Building Client project... 
 	@cd Client && dotnet publish -c Release
 	
@@ -20,6 +23,6 @@ build: clean
 	@copy /y fxmanifest.lua Dist
 	@copy /y FiveMConfig\lostangeles.yml Dist
 	@copy /y FiveMConfig\lostangeles.yml.sample Dist
-	@xcopy /y /e /I Client\NUI\HTML Dist\Client\NUI\HTML
+	@xcopy /y /e /I Front\dist Dist\Front
 	@xcopy /y /e /I Client\bin\Release\net452\publish Dist\Client
 	@xcopy /y /e /I Server\bin\Release\netstandard2.0\publish Dist\Server

@@ -1,6 +1,12 @@
 <Project Sdk="CitizenFX.Sdk.Client/0.2.3">
     <ItemGroup>
         <Compile Include="../Shared/**/*.cs" />
+        <Compile Update="..\Shared\Primitives\PlayerPosition.cs">
+          <Link>NUI\HTML\Assets\Primitives\PlayerPosition.cs</Link>
+        </Compile>
+        <Compile Update="..\Shared\Primitives\RoutingBucketTypes.cs">
+          <Link>NUI\HTML\Assets\Primitives\RoutingBucketTypes.cs</Link>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <Reference Include="NativeUI">

@@ -45,6 +45,8 @@
         public abstract class Inventory
         {
             public const string OpenInventoryEvent = "Inventory::OpenInventory";
+            public const string ShowQuickSlotsEvent = "Inventory::ShowQuickSlots";
+            public const string HideQuickSlotsEvent = "Inventory::HideQuickSlots";
 
             public const string CloseInventoryNuiCallback = "Inventory::Close";
         }

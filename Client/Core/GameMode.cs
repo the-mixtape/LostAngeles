@@ -106,6 +106,7 @@ namespace LostAngeles.Client.Core
         private async Task UpdateNoneStatus()
         {
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Default);
+            TriggerEvent(ClientEvents.Inventory.HideQuickSlotsEvent);
             await Task.FromResult(0);
         }
 
@@ -114,6 +115,7 @@ namespace LostAngeles.Client.Core
             ControlController.TogglePlayerControl(false);
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Uniq);
             TriggerServerEvent(ServerEvents.GameMode.InitializeCharacterEvent);
+            TriggerEvent(ClientEvents.Inventory.HideQuickSlotsEvent);
             await Task.FromResult(0);
         }
 
@@ -121,6 +123,7 @@ namespace LostAngeles.Client.Core
         {
             ControlController.TogglePlayerControl(false);
             BucketController.SetLocalPLayerRoutingBucket(RoutingBucketTypes.Uniq);
+            TriggerEvent(ClientEvents.Inventory.HideQuickSlotsEvent);
 
             // TODO: hide game ui
             // API.DisplayRadar(false);
@@ -134,6 +137,7 @@ namespace LostAngeles.Client.Core
         private async Task UpdateSpawningStatus()
         {
             API.DoScreenFadeOut(SpawnFadeOutInTime);
+            TriggerEvent(ClientEvents.Inventory.HideQuickSlotsEvent);
             await CharacterCustomizer.CharacterCustomizer.RefreshModel();
         }
 
@@ -150,6 +154,8 @@ namespace LostAngeles.Client.Core
             
             Player.PositionUpdater.Enable();
             TriggerEvent(ClientEvents.Player.InitializeInputControllerEvent);
+            
+            TriggerEvent(ClientEvents.Inventory.ShowQuickSlotsEvent);
             
             await Task.FromResult(0);
         }

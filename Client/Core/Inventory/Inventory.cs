@@ -12,19 +12,30 @@ namespace LostAngeles.Client.Core.Inventory
         public Inventory()
         {
             EventHandlers[ClientEvents.Inventory.OpenInventoryEvent] += new Action(OnOpenInventory);
+            EventHandlers[ClientEvents.Inventory.ShowQuickSlotsEvent] += new Action(OnShowQuickSlots);
+            EventHandlers[ClientEvents.Inventory.HideQuickSlotsEvent] += new Action(OnHideQuickSlots);
 
             RegisterNuiCallbacks();
         }
 
         private void OnOpenInventory()
         {
-            if (API.IsPauseMenuActive() || API.IsNuiFocused())
+            if (API.IsPauseMenuActive()) // API.IsNuiFocused()
             {
                 return;
             }
-
-            Debug.WriteLine("Opening inventory");
+            
             ToggleInventoryVisible(true);
+        }
+
+        private void OnShowQuickSlots()
+        {
+            ToggleQuickSlotsVisible(true);
+        }
+        
+        private void OnHideQuickSlots()
+        {
+            ToggleQuickSlotsVisible(false);
         }
     }
 }
